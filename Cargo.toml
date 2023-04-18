@@ -10,3 +10,7 @@ edition = "2021"
 [dependencies]
 
 holo_hash = "0.2.0-beta-rc.3"
+
+[dependencies.rusqlite]
+version = "0.28.0"
+features = ["bundled"]
