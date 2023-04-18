@@ -40,4 +40,4 @@ jobs:
 
           # set VCPKGRS_DYNAMIC=1
 
-          cargo build -- --verbose
+          cargo build --verbose
