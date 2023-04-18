@@ -1,0 +1,45 @@
+name: "publish"
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  publish-test:
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [windows-2019]
+    env:
+      MACOSX_DEPLOYMENT_TARGET: 10.13
+
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: setup node
+        uses: actions/setup-node@v1
+        with:
+          node-version: 16
+      - name: install Rust stable
+        uses: actions-rs/toolchain@v1
+        with:
+          override: true
+          toolchain: stable
+      - name: install Go stable
+        uses: actions/setup-go@v4
+        with:
+          go-version: 'stable'
+      - name: install app dependencies and info
+        run: npm install && npm run tauri info
+
+
+      - name: build Windows
+        if: matrix.platform == 'windows-2019'
+        run: |
+
+          # attempting to fix 'LINK : fatal error LNK1181: cannot open input file 'sqlite3.lib'': https://github.com/rusqlite/rusqlite#notes-on-building-rusqlite-and-libsqlite3-sys
+          # vcpkg install sqlite3:x64-windows
+
+          # set VCPKGRS_DYNAMIC=1
+
+          cargo build -- --verbose
